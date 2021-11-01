@@ -23,7 +23,7 @@ namespace TestingApi.Controllers
         /// <summary>
         /// Get all tests
         /// </summary>
-        /// <returns></returns>
+        /// <returns>All tests</returns>
         [HttpGet()]
         public ActionResult<List<Test>> Get()
         {
@@ -34,7 +34,7 @@ namespace TestingApi.Controllers
         /// Get test by ID
         /// </summary>
         /// <param name="id">Test id</param>
-        /// <returns></returns>
+        /// <returns>Test by Id</returns>
         [HttpGet("{id}")]
         public ActionResult<Test> Get(int id)
         {
@@ -51,7 +51,7 @@ namespace TestingApi.Controllers
         /// Update Test
         /// </summary>
         /// <param name="test">Updated test</param>
-        /// <returns></returns>
+        /// <returns>Updated test</returns>
         [HttpPut("{Test}")]
         public ActionResult<Test> Put(Test test)
         {
@@ -72,8 +72,8 @@ namespace TestingApi.Controllers
         /// <summary>
         /// Add test to DB
         /// </summary>
-        /// <param name="test"></param>
-        /// <returns></returns>
+        /// <param name="test">Added test</param>
+        /// <returns>Created test</returns>
         [HttpPost("{Test}")]
         public ActionResult<Test> Post(Test test)
         {
@@ -86,6 +86,11 @@ namespace TestingApi.Controllers
             return Ok(test);
         }
 
+        /// <summary>
+        /// Delete test from DB
+        /// </summary>
+        /// <param name="test">Added test</param>
+        /// <returns>Deleted test</returns>
         [HttpDelete("{id}")]
         public ActionResult<Test> Delete(int id)
         {
@@ -99,6 +104,11 @@ namespace TestingApi.Controllers
             return Ok(test);
         }
 
+        /// <summary>
+        /// Calculate test results
+        /// </summary>
+        /// <param name="testResult">test result object</param>
+        /// <returns>count of right answers</returns>
         [HttpGet("{TestResult}")]
         public ActionResult<int> FinishTest(TestResult testResult)
         {

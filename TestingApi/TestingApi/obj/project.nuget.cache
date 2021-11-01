@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "MqlplWNcdBJWRckfDDAOuLtFt4Ag2ntIhTbrGWE0CxLAe0NUxcn+mYuErsWirY0miSx8W/YSNcu06d/qVC9QwA==",
+  "dgSpecHash": "qKUT8u6K73pVdoGjW9dEYLODCvPHRN7V9O0617CA4POTJLYptU/Edi1Sz/rcCIK4QEbsAdH97hVIG1/NoUb9nA==",
   "success": true,
-  "projectFilePath": "E:\\VNTU-Testing-API\\TestingApi\\TestingApi\\TestingApi.csproj",
+  "projectFilePath": "E:\\TestingSystemForVntu\\VNTU-Testing-API\\TestingApi\\TestingApi\\TestingApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ryzhk\\.nuget\\packages\\entityframework\\6.4.4\\entityframework.6.4.4.nupkg.sha512",
     "C:\\Users\\ryzhk\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",

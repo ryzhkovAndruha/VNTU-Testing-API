@@ -1715,11 +1715,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\VNTU-Testing-API\\TestingApi\\TestingApi\\TestingApi.csproj",
+      "projectUniqueName": "E:\\TestingSystemForVntu\\VNTU-Testing-API\\TestingApi\\TestingApi\\TestingApi.csproj",
       "projectName": "TestingApi",
-      "projectPath": "E:\\VNTU-Testing-API\\TestingApi\\TestingApi\\TestingApi.csproj",
+      "projectPath": "E:\\TestingSystemForVntu\\VNTU-Testing-API\\TestingApi\\TestingApi\\TestingApi.csproj",
       "packagesPath": "C:\\Users\\ryzhk\\.nuget\\packages\\",
-      "outputPath": "E:\\VNTU-Testing-API\\TestingApi\\TestingApi\\obj\\",
+      "outputPath": "E:\\TestingSystemForVntu\\VNTU-Testing-API\\TestingApi\\TestingApi\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
