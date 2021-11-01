@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,11 @@ namespace TestingApi.Controllers
     public class TestsController : ControllerBase
     {
         TestRepository testRepository;
-        public TestsController()
+
+        public TestsController(TestRepository testRepository)
         {
             TestData.CreateTestData();
-            testRepository = new TestRepository();
+            this.testRepository = testRepository;
         }
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace TestingApi.Controllers
         /// </summary>
         /// <param name="id">Test id</param>
         /// <returns>Test by Id</returns>
-        [HttpGet("{id}")]
+        [HttpGet("id")]
         public ActionResult<Test> Get(int id)
         {
             Test test = testRepository.GetById(id);
@@ -52,7 +54,7 @@ namespace TestingApi.Controllers
         /// </summary>
         /// <param name="test">Updated test</param>
         /// <returns>Updated test</returns>
-        [HttpPut("{Test}")]
+        [HttpPut("Test")]
         public ActionResult<Test> Put(Test test)
         {
             if (test == null)
@@ -74,7 +76,7 @@ namespace TestingApi.Controllers
         /// </summary>
         /// <param name="test">Added test</param>
         /// <returns>Created test</returns>
-        [HttpPost("{Test}")]
+        [HttpPost("Test")]
         public ActionResult<Test> Post(Test test)
         {
             if (test == null)
@@ -91,7 +93,7 @@ namespace TestingApi.Controllers
         /// </summary>
         /// <param name="test">Added test</param>
         /// <returns>Deleted test</returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("id")]
         public ActionResult<Test> Delete(int id)
         {
             Test test = testRepository.GetList().FirstOrDefault(t => t.Id == id);
@@ -109,7 +111,7 @@ namespace TestingApi.Controllers
         /// </summary>
         /// <param name="testResult">test result object</param>
         /// <returns>count of right answers</returns>
-        [HttpGet("{TestResult}")]
+        [HttpGet("TestResult")]
         public ActionResult<int> FinishTest(TestResult testResult)
         {
             if (testResult == null)

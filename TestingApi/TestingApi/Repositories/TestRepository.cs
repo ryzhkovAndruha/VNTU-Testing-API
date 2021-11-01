@@ -10,15 +10,27 @@ namespace TestingApi.Repositories
     public class TestRepository
     {
         TestContext testContext;
+        QuestionsRepository questionsRepository;
 
-        public TestRepository()
+        public TestRepository(TestContext testContext)
         {
-            testContext = new TestContext();
-            testContext.Database.CreateIfNotExists();
+            this.testContext = testContext;
+            questionsRepository = new QuestionsRepository(testContext);
         }
 
         public List<Test> GetList() => testContext.Tests.ToList();
-        public Test GetById(int id) => testContext.Tests.Find(id);
+        public Test GetById(int testId)
+        {
+            var test = testContext.Tests.FirstOrDefault(t => t.Id == testId);
+            if (test==null)
+            {
+                return null;
+            }
+
+            questionsRepository.GetQuestionsForSpecificTest(testId);
+
+            return test;
+        }
         public void Update(Test item)
         {
             var test = testContext.Tests.Find(item.Id);
@@ -36,7 +48,8 @@ namespace TestingApi.Repositories
         public void Create(Test item)
         {
             testContext.Tests.Add(item);
-            testContext.SaveChanges();
+            int s = testContext.Tests.Count();
+            s = testContext.SaveChanges();
         }
         public void Delete(int id)
         {
@@ -48,7 +61,7 @@ namespace TestingApi.Repositories
         {
             TestData.CreateTestData();
             testContext.Tests.Add(TestData.Tests[0]);
-            int s = testContext.SaveChanges();
+            testContext.SaveChanges();
         }
     }
 }
