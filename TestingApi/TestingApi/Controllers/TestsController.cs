@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,11 @@ namespace TestingApi.Controllers
     public class TestsController : ControllerBase
     {
         TestRepository testRepository;
-        public TestsController()
+
+        public TestsController(TestRepository testRepository)
         {
             TestData.CreateTestData();
-            testRepository = new TestRepository();
+            this.testRepository = testRepository;
         }
 
         /// <summary>

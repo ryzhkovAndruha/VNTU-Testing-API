@@ -12,11 +12,10 @@ namespace TestingApi.Repositories
         TestContext testContext;
         QuestionsRepository questionsRepository;
 
-        public TestRepository()
+        public TestRepository(TestContext testContext)
         {
-            testContext = new TestContext();
+            this.testContext = testContext;
             questionsRepository = new QuestionsRepository(testContext);
-            testContext.Database.CreateIfNotExists();
         }
 
         public List<Test> GetList() => testContext.Tests.ToList();
@@ -49,7 +48,8 @@ namespace TestingApi.Repositories
         public void Create(Test item)
         {
             testContext.Tests.Add(item);
-            testContext.SaveChanges();
+            int s = testContext.Tests.Count();
+            s = testContext.SaveChanges();
         }
         public void Delete(int id)
         {
