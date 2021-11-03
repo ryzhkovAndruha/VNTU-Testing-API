@@ -119,7 +119,7 @@ namespace TestingApi.Controllers
                 return BadRequest();
             }
 
-            Test test = testRepository.GetList().FirstOrDefault(t => t.Id == testResult.Id);
+            Test test = testRepository.GetList().FirstOrDefault(t => t.Id == testResult.TestId);
             int countOfRightAnswers = 0;
 
             foreach (var result in testResult.QuestionResults)
@@ -132,6 +132,10 @@ namespace TestingApi.Controllers
                     countOfRightAnswers++;
                 }
             }
+
+            test.CountOfCorrectAnswers = countOfRightAnswers;
+            test.ResultInPersent = (countOfRightAnswers / test.Questions.Count) * 100;
+
 
             return Ok(countOfRightAnswers);
         }

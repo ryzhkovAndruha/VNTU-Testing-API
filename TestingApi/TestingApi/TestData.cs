@@ -25,7 +25,7 @@ namespace TestingApi
                     Name = "Основы C#",
                     Questions = new List<Question>(CreateQuestions()),
                     CountOfCorrectAnswers = 0,
-                    CurrentQuestion = 0
+                    TimeForQuestionInSeconds = 60,
                 }
             };
         }

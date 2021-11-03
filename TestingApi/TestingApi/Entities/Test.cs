@@ -10,9 +10,9 @@ namespace TestingApi.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public List<Question> Questions { get; set; }
-        public int CurrentQuestion { get; set; }
         public int CountOfCorrectAnswers { get; set; }
-        public int Result { get; set; }
+        public int ResultInPersent { get; set; }
+        public int TimeForQuestionInSeconds { get; set; }
 
         public Test()
         {

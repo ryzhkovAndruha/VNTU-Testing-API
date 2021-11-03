@@ -41,15 +41,24 @@ namespace TestingApi.Repositories
 
             test.Name = item.Name;
             test.Questions = item.Questions;
-            test.Result = item.Result;
-            test.CountOfCorrectAnswers = item.CountOfCorrectAnswers;
+            test.TimeForQuestionInSeconds = item.TimeForQuestionInSeconds;
             testContext.SaveChanges();
         }
         public void Create(Test item)
         {
             testContext.Tests.Add(item);
-            int s = testContext.Tests.Count();
-            s = testContext.SaveChanges();
+            testContext.SaveChanges();
+
+            foreach (var question in item.Questions)
+            {
+                question.TestId = item.Id;
+                foreach (var answer in question.Answers)
+                {
+                    answer.QuestionId = question.Id;
+                }
+            }
+
+            Update(item);
         }
         public void Delete(int id)
         {
