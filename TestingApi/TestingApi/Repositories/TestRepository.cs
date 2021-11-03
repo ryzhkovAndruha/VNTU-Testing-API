@@ -19,21 +19,21 @@ namespace TestingApi.Repositories
         }
 
         public List<Test> GetList() => testContext.Tests.ToList();
-        public Test GetById(int testId)
+        public Test GetByID(int testID)
         {
-            var test = testContext.Tests.FirstOrDefault(t => t.Id == testId);
+            var test = testContext.Tests.FirstOrDefault(t => t.ID == testID);
             if (test==null)
             {
                 return null;
             }
 
-            questionsRepository.GetQuestionsForSpecificTest(testId);
+            questionsRepository.GetQuestionsForSpecificTest(testID);
 
             return test;
         }
         public void Update(Test item)
         {
-            var test = testContext.Tests.Find(item.Id);
+            var test = testContext.Tests.Find(item.ID);
             if (test == null)
             {
                 return;
@@ -51,10 +51,10 @@ namespace TestingApi.Repositories
 
             foreach (var question in item.Questions)
             {
-                question.TestId = item.Id;
+                question.TestID = item.ID;
                 foreach (var answer in question.Answers)
                 {
-                    answer.QuestionId = question.Id;
+                    answer.QuestionID = question.ID;
                 }
             }
 

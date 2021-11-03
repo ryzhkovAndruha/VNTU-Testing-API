@@ -7,12 +7,12 @@ namespace TestingApi.Entities
 {
     public class QuestionResult
     {
-        public int QuestionId { get; set; }
-        public List<int> AnswersId { get; set; }
+        public int QuestionID { get; set; }
+        public List<int> AnswersID { get; set; }
 
         public QuestionResult()
         {
-            AnswersId = new List<int>();
+            AnswersID = new List<int>();
         }
     }
 }

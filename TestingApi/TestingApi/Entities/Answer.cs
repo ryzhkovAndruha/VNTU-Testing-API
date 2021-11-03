@@ -8,9 +8,9 @@ namespace TestingApi.Entities
 {
     public class Answer
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int QuestionId { get; set; }
+        public int QuestionID { get; set; }
         public string Text { get; set; }
         public bool IsCorrect { get; set; }
     }

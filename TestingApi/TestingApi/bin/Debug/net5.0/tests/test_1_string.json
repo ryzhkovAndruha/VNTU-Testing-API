@@ -1,0 +1,24 @@
+{
+  "ID": 1,
+  "Name": "string",
+  "Questions": [
+    {
+      "ID": 1,
+      "TestID": 1,
+      "Title": "string",
+      "Description": "string",
+      "Answers": [
+        {
+          "ID": 1,
+          "QuestionID": 1,
+          "Text": "string",
+          "IsCorrect": true
+        }
+      ]
+    }
+  ],
+  "CountOfCorrectAnswers": 0,
+  "ResultInPersent": 0,
+  "TimeForQuestionInSeconds": 0,
+  "SaveToJson": true
+}
