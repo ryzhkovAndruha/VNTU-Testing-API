@@ -7,7 +7,7 @@ namespace TestingApi.Entities
 {
     public class TestResult
     {
-        public int TestId { get; set; }
+        public int TestID { get; set; }
         public List<QuestionResult> QuestionResults { get; set; }
 
         public TestResult()

@@ -18,9 +18,9 @@ namespace TestingApi.Repositories
 
         public List<Answer> GetList() => testContext.Answers.ToList();
 
-        public List<Answer> GetAnswersForSpecificQuestion(int questionId)
+        public List<Answer> GetAnswersForSpecificQuestion(int questionID)
         {
-            return testContext.Answers.Where(a => a.QuestionId == questionId).ToList();
+            return testContext.Answers.Where(a => a.QuestionID == questionID).ToList();
         }
     }
 }

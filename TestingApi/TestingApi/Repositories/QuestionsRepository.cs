@@ -20,9 +20,9 @@ namespace TestingApi.Repositories
 
         public List<Question> GetList() => testContext.Questions.ToList();
 
-        public List<Question> GetQuestionsForSpecificTest(int testId)
+        public List<Question> GetQuestionsForSpecificTest(int testID)
         {
-            var specificQuestions = testContext.Questions.Where(t => t.TestId == testId).ToList();
+            var specificQuestions = testContext.Questions.Where(t => t.TestID == testID).ToList();
             
             if(specificQuestions == null)
             {
@@ -31,7 +31,7 @@ namespace TestingApi.Repositories
 
             foreach (var question in specificQuestions)
             {
-                answerRepository.GetAnswersForSpecificQuestion(question.Id);
+                answerRepository.GetAnswersForSpecificQuestion(question.ID);
             }
 
             return specificQuestions;

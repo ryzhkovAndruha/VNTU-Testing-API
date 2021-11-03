@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TestingApi.Entities;
 using TestingApi.Repositories;
+using TestingApi.Services;
 
 namespace TestingApi.Controllers
 {
@@ -36,11 +37,11 @@ namespace TestingApi.Controllers
         /// Get test by ID
         /// </summary>
         /// <param name="id">Test id</param>
-        /// <returns>Test by Id</returns>
+        /// <returns>Test by ID</returns>
         [HttpGet("id")]
         public ActionResult<Test> Get(int id)
         {
-            Test test = testRepository.GetById(id);
+            Test test = testRepository.GetByID(id);
             if (test == null)
             {
                 return NotFound();
@@ -61,12 +62,18 @@ namespace TestingApi.Controllers
             {
                 return BadRequest();
             }
-            if (!testRepository.GetList().Any(t => t.Id == test.Id))
+            if (!testRepository.GetList().Any(t => t.ID == test.ID))
             {
                 NotFound();
             }
+            
 
             testRepository.Update(test);
+
+            if (test.SaveToJson == true)
+            {
+                TestService.SaveTestToJson(test);
+            }
 
             return Ok(test);
         }
@@ -85,6 +92,12 @@ namespace TestingApi.Controllers
             }
 
             testRepository.Create(test);
+
+            if (test.SaveToJson == true)
+            {
+                TestService.SaveTestToJson(test);
+            }
+
             return Ok(test);
         }
 
@@ -96,7 +109,7 @@ namespace TestingApi.Controllers
         [HttpDelete("id")]
         public ActionResult<Test> Delete(int id)
         {
-            Test test = testRepository.GetList().FirstOrDefault(t => t.Id == id);
+            Test test = testRepository.GetList().FirstOrDefault(t => t.ID == id);
             if (test == null)
             {
                 return NotFound();
@@ -119,13 +132,13 @@ namespace TestingApi.Controllers
                 return BadRequest();
             }
 
-            Test test = testRepository.GetList().FirstOrDefault(t => t.Id == testResult.TestId);
+            Test test = testRepository.GetList().FirstOrDefault(t => t.ID == testResult.TestID);
             int countOfRightAnswers = 0;
 
             foreach (var result in testResult.QuestionResults)
             {
-                var rightAnswers = test.Questions[result.QuestionId].Answers.Where(a => a.IsCorrect == true).Select(a => a.Id).ToArray();
-                var answers = result.AnswersId.ToArray();
+                var rightAnswers = test.Questions[result.QuestionID].Answers.Where(a => a.IsCorrect == true).Select(a => a.ID).ToArray();
+                var answers = result.AnswersID.ToArray();
 
                 if (Enumerable.SequenceEqual(answers, rightAnswers))
                 {
