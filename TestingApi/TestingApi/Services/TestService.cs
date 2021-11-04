@@ -18,5 +18,20 @@ namespace TestingApi.Services
             string jsonObject = JsonSerializer.Serialize(test, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(fileName, jsonObject);
         }
+
+        public static Test LoadTestFromJson(string fileName)
+        {
+            try
+            {
+                string jsonText = File.ReadAllText(fileName);
+                return JsonSerializer.Deserialize<Test>(jsonText);
+            }
+            catch(Exception ex)
+            {
+                throw;
+                return null;
+            }
+            
+        }
     }
 }
