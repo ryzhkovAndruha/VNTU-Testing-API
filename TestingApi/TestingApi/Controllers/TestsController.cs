@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TestingApi.Entities;
 using TestingApi.Repositories;
 using TestingApi.Services;
+using TestingApi.MyLogger;
 
 namespace TestingApi.Controllers
 {
@@ -19,6 +20,7 @@ namespace TestingApi.Controllers
 
         public TestsController(TestRepository testRepository)
         {
+            Logger.Init();
             TestData.CreateTestData();
             this.testRepository = testRepository;
         }
@@ -30,7 +32,18 @@ namespace TestingApi.Controllers
         [HttpGet()]
         public ActionResult<List<Test>> Get()
         {
-            return Ok(testRepository.GetList());
+            try
+            {
+                var allTests = testRepository.GetList();
+                Logger.WriteMessage("Get", $"Get all tests sucsesfull", LogLevel.Info);
+                return Ok(allTests);
+            }
+            catch(Exception ex)
+            {
+                Logger.WriteMessage("Get", $"Can't get all tests. Exception {ex}", LogLevel.Error);
+                return NoContent();
+            }
+            
         }
 
         /// <summary>
@@ -41,12 +54,24 @@ namespace TestingApi.Controllers
         [HttpGet("id")]
         public ActionResult<Test> Get(int id)
         {
-            Test test = testRepository.GetByID(id);
+            Test test = null;
+            try
+            {
+                test = testRepository.GetByID(id);    
+            }
+            catch(Exception ex)
+            {
+                Logger.WriteMessage("GetById", $"Can't get test number {id}. Exception {ex}", LogLevel.Error);
+                return NoContent();
+            }
+            
             if (test == null)
             {
+                Logger.WriteMessage("GetById", $"Get test number {id} returns null", LogLevel.Warn);
                 return NotFound();
             }
 
+            Logger.WriteMessage("GetById", $"Get test number {id} sucsesfull. Test name: {test.Name}", LogLevel.Info);
             return Ok(test);
         }
 
@@ -60,21 +85,39 @@ namespace TestingApi.Controllers
         {
             if (test == null)
             {
+                Logger.WriteMessage("Put", $"Updated test equals null", LogLevel.Warn);
                 return BadRequest();
             }
             if (!testRepository.GetList().Any(t => t.ID == test.ID))
             {
-                NotFound();
+                Logger.WriteMessage("Put", $"Updated test not found in DB", LogLevel.Warn);
+                return NotFound();
             }
-            
 
-            testRepository.Update(test);
-
-            if (test.SaveToJson == true)
+            try
             {
-                TestService.SaveTestToJson(test);
+                testRepository.Update(test);
+            }
+            catch(Exception ex)
+            {
+                Logger.WriteMessage("Put", $"Can't update test number {test.ID}. Exception {ex}", LogLevel.Error);
+                return Problem();
             }
 
+            if (test.SaveToJson)
+            {
+                try
+                {
+                    TestService.SaveTestToJson(test);
+                    Logger.WriteMessage("Put", $"Test number {test.ID} saved to JSON sucsesfully", LogLevel.Info);
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteMessage("Put", $"Can't save test number {test.ID} to JSON. Exception {ex}", LogLevel.Error);
+                }
+            }
+
+            Logger.WriteMessage("Put", $"Test number {test.ID} updated sucsesfully", LogLevel.Info);
             return Ok(test);
         }
 
@@ -88,16 +131,34 @@ namespace TestingApi.Controllers
         {
             if (test == null)
             {
+                Logger.WriteMessage("Post", $"Added test equals null", LogLevel.Warn);
                 return BadRequest();
             }
 
-            testRepository.Create(test);
+            try
+            {
+                testRepository.Create(test);
+            }
+            catch(Exception ex)
+            {
+                Logger.WriteMessage("Post", $"Can't create new test. Exception {ex}", LogLevel.Error);
+                return Problem();
+            }
 
             if (test.SaveToJson == true)
             {
-                TestService.SaveTestToJson(test);
+                try
+                {
+                    TestService.SaveTestToJson(test);
+                    Logger.WriteMessage("Post", $"Test number {test.ID} saved to JSON sucsesfully", LogLevel.Info);
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteMessage("Post", $"Can't save test number {test.ID} to JSON. Exception {ex}", LogLevel.Error);
+                }
             }
 
+            Logger.WriteMessage("Post", $"Test number {test.ID} created sucsesfully", LogLevel.Info);
             return Ok(test);
         }
 
@@ -109,13 +170,34 @@ namespace TestingApi.Controllers
         [HttpDelete("id")]
         public ActionResult<Test> Delete(int id)
         {
-            Test test = testRepository.GetList().FirstOrDefault(t => t.ID == id);
+            Test test = null;
+            try
+            {
+                test = testRepository.GetByID(id);
+            }
+            catch(Exception ex)
+            {
+                Logger.WriteMessage("Delete", $"Can't get test number {id}. Exception {ex}", LogLevel.Error);
+                return Problem();
+            }
+
             if (test == null)
             {
+                Logger.WriteMessage("Delete", $"Can't find deleted test number {id}", LogLevel.Warn);
                 return NotFound();
             }
 
-            testRepository.Delete(id);
+            try
+            {
+                testRepository.Delete(id);
+            }
+            catch(Exception ex)
+            {
+                Logger.WriteMessage("Delete", $"Can't delete test number {id}. Exception {ex}", LogLevel.Error);
+                return Problem();
+            }
+
+            Logger.WriteMessage("Delete", $"Test number {test.ID} deleted sucsesfully", LogLevel.Info);
             return Ok(test);
         }
 
@@ -132,18 +214,29 @@ namespace TestingApi.Controllers
             {
                 testFromFile = TestService.LoadTestFromJson(fileName);
             }
-            catch
+            catch(Exception ex)
             {
+                Logger.WriteMessage("ImportTestFromFile", $"Can't parse test from file {fileName}. Exception {ex}", LogLevel.Error);
                 return BadRequest();
             }
 
             if(testFromFile == null)
             {
+                Logger.WriteMessage("ImportTestFromFile", $"Test from file returned null", LogLevel.Warn);
                 return BadRequest();
             }
 
+            try
+            {
+                testRepository.Create(testFromFile);
+            }
+            catch(Exception ex)
+            {
+                Logger.WriteMessage("ImportTestFromFile", $"Can't add parsed test to DB. Exception {ex}", LogLevel.Error);
+                return BadRequest();
+            }
 
-            testRepository.Create(testFromFile);
+            Logger.WriteMessage("ImportTestFromFile", $"Test number {testFromFile.ID} import from JSON sucsesfully", LogLevel.Info);
             return Ok(testFromFile);
         }
 
@@ -157,16 +250,45 @@ namespace TestingApi.Controllers
         {
             if (testResult == null)
             {
+                Logger.WriteMessage("FinishTest", $"Test result get null", LogLevel.Warn);
                 return BadRequest();
             }
 
-            Test test = testRepository.GetList().FirstOrDefault(t => t.ID == testResult.TestID);
+            Test test;
+
+            try
+            {
+                test = testRepository.GetByID(testResult.TestID);
+            }
+            catch(Exception ex)
+            {
+                Logger.WriteMessage("FinishTest", $"Can't get test {testResult.TestID} from DB. Exception {ex}", LogLevel.Error);
+                return BadRequest();
+            }
+            
             int countOfRightAnswers = 0;
 
             foreach (var result in testResult.QuestionResults)
             {
-                var rightAnswers = test.Questions[result.QuestionID].Answers.Where(a => a.IsCorrect == true).Select(a => a.ID).ToArray();
-                var answers = result.AnswersID.ToArray();
+                int[] rightAnswers, answers;
+                try
+                {
+                    rightAnswers = test.Questions[result.QuestionID].Answers.Where(a => a.IsCorrect == true).Select(a => a.ID).ToArray();
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteMessage("FinishTest", $"Can't get right answers for question {result.QuestionID}. Exception {ex}", LogLevel.Error);
+                    return BadRequest();
+                }
+                try
+                {
+                    answers = result.AnswersID.ToArray();
+                }
+                catch(Exception ex)
+                {
+                    Logger.WriteMessage("FinishTest", $"Can't get student answers for question {result.QuestionID}. Exception {ex}", LogLevel.Error);
+                    return BadRequest();
+                }
 
                 if (Enumerable.SequenceEqual(answers, rightAnswers))
                 {
@@ -177,7 +299,7 @@ namespace TestingApi.Controllers
             test.CountOfCorrectAnswers = countOfRightAnswers;
             test.ResultInPersent = (countOfRightAnswers / test.Questions.Count) * 100;
 
-
+            Logger.WriteMessage("FinishTest", $"Test result calculation for test {test.ID} finish sucsesfully", LogLevel.Info);
             return Ok(countOfRightAnswers);
         }
     }

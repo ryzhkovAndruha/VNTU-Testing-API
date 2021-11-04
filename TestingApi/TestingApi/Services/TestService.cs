@@ -13,10 +13,17 @@ namespace TestingApi.Services
         private const string TESTS_FOLDER = "tests";
         public static void SaveTestToJson(Test test)
         {
-            Directory.CreateDirectory(TESTS_FOLDER);
-            string fileName = $"{TESTS_FOLDER}\\test_{test.ID}_{test.Name}.json";
-            string jsonObject = JsonSerializer.Serialize(test, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(fileName, jsonObject);
+            try
+            {
+                Directory.CreateDirectory(TESTS_FOLDER);
+                string fileName = $"{TESTS_FOLDER}\\test_{test.ID}_{test.Name}.json";
+                string jsonObject = JsonSerializer.Serialize(test, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(fileName, jsonObject);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public static Test LoadTestFromJson(string fileName)
@@ -26,10 +33,9 @@ namespace TestingApi.Services
                 string jsonText = File.ReadAllText(fileName);
                 return JsonSerializer.Deserialize<Test>(jsonText);
             }
-            catch(Exception ex)
+            catch
             {
                 throw;
-                return null;
             }
             
         }
