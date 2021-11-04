@@ -120,6 +120,34 @@ namespace TestingApi.Controllers
         }
 
         /// <summary>
+        /// Add to data base test that will be loaded from json-file
+        /// </summary>
+        /// <param name="fileName">path to file</param>
+        /// <returns>Added test</returns>
+        [HttpPost("fileName")]
+        public ActionResult<Test> ImportTestFromFile(string fileName)
+        {
+            Test testFromFile;
+            try
+            {
+                testFromFile = TestService.LoadTestFromJson(fileName);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
+            if(testFromFile == null)
+            {
+                return BadRequest();
+            }
+
+
+            testRepository.Create(testFromFile);
+            return Ok(testFromFile);
+        }
+
+        /// <summary>
         /// Calculate test results
         /// </summary>
         /// <param name="testResult">test result object</param>
