@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using TestingApi.Context;
 using TestingApi.Controllers;
 using TestingApi.Repositories;
+using log4net;
+using log4net.Config;
 
 namespace TestingApi
 {
