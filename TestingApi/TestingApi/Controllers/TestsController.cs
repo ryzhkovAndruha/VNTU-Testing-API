@@ -35,7 +35,8 @@ namespace TestingApi.Controllers
             try
             {
                 var allTests = testRepository.GetList();
-                Logger.WriteMessage("Get", $"Get all tests sucsesfull", LogLevel.Info);
+                Logger.WriteMessage("Get", $"Get all tests sucsesfull. Tests count {allTests.Count}", LogLevel.Info);
+
                 return Ok(allTests);
             }
             catch(Exception ex)
@@ -57,7 +58,8 @@ namespace TestingApi.Controllers
             Test test = null;
             try
             {
-                test = testRepository.GetByID(id);    
+                test = testRepository.GetByID(id);
+                test.Questions.Shuffle();
             }
             catch(Exception ex)
             {

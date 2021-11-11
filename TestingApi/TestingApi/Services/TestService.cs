@@ -5,12 +5,15 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TestingApi.Entities;
+using TestingApi.MyLogger;
 
 namespace TestingApi.Services
 {
     public static class TestService
     {
         private const string TESTS_FOLDER = "tests";
+        private static Random rng = new Random();
+
         public static void SaveTestToJson(Test test)
         {
             try
@@ -38,6 +41,26 @@ namespace TestingApi.Services
                 throw;
             }
             
+        }   
+
+        public static void Shuffle<T>(this IList<T> list)
+        {
+            try
+            {
+                int n = list.Count;
+                while (n > 1)
+                {
+                    n--;
+                    int k = rng.Next(n + 1);
+                    T value = list[k];
+                    list[k] = list[n];
+                    list[n] = value;
+                }
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }
