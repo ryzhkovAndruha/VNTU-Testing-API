@@ -59,6 +59,12 @@ namespace TestingApi.Controllers
             try
             {
                 test = testRepository.GetByID(id);
+
+                foreach (var question in test.Questions)
+                {
+                    question.Answers.Shuffle();
+                }
+
                 test.Questions.Shuffle();
             }
             catch(Exception ex)
