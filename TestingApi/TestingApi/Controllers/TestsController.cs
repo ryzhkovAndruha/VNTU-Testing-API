@@ -59,7 +59,6 @@ namespace TestingApi.Controllers
             try
             {
                 test = testRepository.GetByID(id);
-                test.Questions.Shuffle();
             }
             catch(Exception ex)
             {
@@ -75,6 +74,36 @@ namespace TestingApi.Controllers
 
             Logger.WriteMessage("GetById", $"Get test number {id} sucsesfull. Test name: {test.Name}", LogLevel.Info);
             return Ok(test);
+        }
+
+        /// <summary>
+        /// Get test by ID with shuffled questions and answers to pass the test
+        /// </summary>
+        /// <param name="id">Test id</param>
+        /// <returns>Test with shuffled questions</returns>
+        [HttpGet("id_of_test_for_student")]
+        public ActionResult<Test> GetTestWithShuffledQuestions(int id)
+        {
+            var test = Get(id).Value;
+            try
+            {
+                foreach (var question in test.Questions)
+                {
+                    question.Answers.Shuffle();
+                }
+
+                Logger.WriteMessage("GetTestWithShuffledQuestions", "Answers in every question shuffled sucsesfully", LogLevel.Info);
+
+                test.Questions.Shuffle();
+
+                Logger.WriteMessage("GetTestWithShuffledQuestions", $"Questions in test {id} shuffled sucsesfully", LogLevel.Info);
+                return Ok(test);
+            }
+            catch(Exception ex)
+            {
+                Logger.WriteMessage("GetTestWithShuffledQuestions", $"Can't shuffle test number {id}. Exception {ex}", LogLevel.Error);
+                return Problem();
+            }
         }
 
         /// <summary>
